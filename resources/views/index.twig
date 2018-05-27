@@ -1,0 +1,27 @@
+{% extends 'layout.twig' %}
+
+{% block stylesheet %}
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+{% endblock %}
+
+{% block javascript %}
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+  <script src="../public/javascripts/login-signup-actions.js"></script>
+{% endblock %}
+
+{% block content %}
+  {% if loginError %}
+  <span class="login-signup-error-message">{{loginError}}</span>
+  {% endif %}
+  <form id="login-form" action="login" method="post">
+    <input class="login-signup-input" type="text" name="username" placeholder="Usuario" maxlength="32" autofocus="autofocus">
+    <a class="input-warning-icon" href="#" data-toggle="tooltip" data-placement="left" title="Usuario requerido"></a>
+    <input class="login-signup-input" type="password" name="password" placeholder="Contraseña" maxlength="32">
+    <a class="input-warning-icon" href="#" data-toggle="tooltip" data-placement="left" title="Contraseña requerida"></a>
+    <input id="login-signup-submit-btn" type="submit" value="Ingresar">
+  </form>
+{% endblock %}
+
+{% block bodyscript %}
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js" integrity="sha384-feJI7QwhOS+hwpX2zkaeJQjeiwlhOP+SdQDqhgvvo1DsjtiSQByFdThsxO669S2D" crossorigin="anonymous"></script>
+{% endblock %}

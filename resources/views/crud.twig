@@ -1,0 +1,128 @@
+{% extends 'layout.twig' %}
+
+{% block stylesheet %}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css" integrity="sha256-DVV5cU9pxHH2Rofop3XD3b3rbfrOSIy2nU61DEbYy1Q=" crossorigin="anonymous">
+{% endblock %}
+
+{% block javascript %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js" integrity="sha256-+jmym6PChFok5u02khNcYDy5AdfiIN7Y/QCbBqiNgeE=" crossorigin="anonymous"></script>
+  <script src="../public/javascripts/crud-actions.js"></script>
+{% endblock %}
+
+{% block content %}
+  <span id="crud-title">Agregar cervecería</span>
+  <form id="crud-form">
+    <input class="crud-input" type="text" placeholder="Nombre" maxlength="64" autofocus="autofocus">
+    <input class="crud-input" type="text" placeholder="Dirección" maxlength="64">
+    <div class="dropdown">
+      <button id="phone-select" class="dropdown-toggle" data-toggle="dropdown">Fijo</button>
+      <ul class="dropdown-menu">
+        <a class="dropdown-item" href="#">Fijo</a>
+        <a class="dropdown-item" href="#">Móvil</a>
+      </ul>
+    </div>
+    <input id="crud-phone-input" class="crud-input" type="text" placeholder="Teléfono" maxlength="64">
+    <div class="daytime-box">
+      <label class="day-container">Domingo
+        <input class="day-check" type="checkbox" checked="checked">
+        <span class="checkmark"></span>
+      </label>
+      <div class="daytime-input-container">
+        <input class="daytime-input timepicker" type="text" placeholder="00:00"><input class="daytime-input timepicker" type="text" placeholder="00:00">
+      </div>
+    </div>
+    <div class="daytime-box">
+      <label class="day-container">Lunes
+        <input class="day-check" type="checkbox" checked="checked">
+        <span class="checkmark"></span>
+      </label>
+      <div class="daytime-input-container">
+        <input class="daytime-input timepicker" type="text" placeholder="00:00"><input class="daytime-input timepicker" type="text" placeholder="00:00">
+      </div>
+    </div>
+    <div class="daytime-box">
+      <label class="day-container">Martes
+        <input class="day-check" type="checkbox" checked="checked">
+        <span class="checkmark"></span>
+      </label>
+      <div class="daytime-input-container">
+        <input class="daytime-input timepicker" type="text" placeholder="00:00"><input class="daytime-input timepicker" type="text" placeholder="00:00">
+      </div>
+    </div>
+    <div class="daytime-box">
+      <label class="day-container">Miércoles
+        <input class="day-check" type="checkbox" checked="checked">
+        <span class="checkmark"></span>
+      </label>
+      <div class="daytime-input-container">
+        <input class="daytime-input timepicker" type="text" placeholder="00:00"><input class="daytime-input timepicker" type="text" placeholder="00:00">
+      </div>
+    </div>
+    <div class="daytime-box">
+      <label class="day-container">Jueves
+        <input class="day-check" type="checkbox" checked="checked">
+        <span class="checkmark"></span>
+      </label>
+      <div class="daytime-input-container">
+        <input class="daytime-input timepicker" type="text" placeholder="00:00"><input class="daytime-input timepicker" type="text" placeholder="00:00">
+      </div>
+    </div>
+    <div class="daytime-box">
+      <label class="day-container">Viernes
+        <input class="day-check" type="checkbox" checked="checked">
+        <span class="checkmark"></span>
+      </label>
+      <div class="daytime-input-container">
+        <input class="daytime-input timepicker" type="text" placeholder="00:00"><input class="daytime-input timepicker" type="text" placeholder="00:00">
+      </div>
+    </div>
+    <div class="daytime-box">
+      <label class="day-container">Sábado
+        <input class="day-check" type="checkbox" checked="checked">
+        <span class="checkmark"></span>
+      </label>
+      <div class="daytime-input-container">
+        <input class="daytime-input timepicker" type="text" placeholder="00:00"><input class="daytime-input timepicker" type="text" placeholder="00:00">
+      </div>
+    </div>
+    <div class="daytime-box">
+      <label class="day-container">Happy hour
+        <input class="day-check" type="checkbox" checked="checked">
+        <span class="checkmark"></span>
+      </label>
+      <div class="daytime-input-container">
+        <input class="daytime-input timepicker" type="text" placeholder="00:00"><input class="daytime-input timepicker" type="text" placeholder="00:00">
+      </div>
+    </div>
+    <div class="file-field">
+      <div class="file-btn">
+        <span>Logo</span>
+        <input type="file" accept="image/jpeg">
+      </div>
+      <div class="file-path-wrapper">
+        <input class="file-path" type="text" placeholder="Subir imagen">
+      </div>
+    </div>
+    <div class="file-field">
+      <div class="file-btn">
+        <span>Foto</span>
+        <input type="file" accept="image/jpeg">
+      </div>
+      <div class="file-path-wrapper">
+        <input class="file-path" type="text" placeholder="Subir imagen">
+      </div>
+    </div>
+    <input class="crud-input" type="text" placeholder="Web" maxlength="64">
+    <input class="crud-input" type="text" placeholder="Email" maxlength="64">
+    <input id="crud-social-facebook-input" class="crud-input" type="text" maxlength="64">
+    <label class="static-input-value" for="crud-social-facebook-input">www.facebook.com/</label>
+    <input id="crud-social-instagram-input" class="crud-input" type="text" maxlength="64">
+    <label class="static-input-value" for="crud-social-instagram-input">www.instagram.com/</label>
+    <button id="crud-save-btn" class="crud-btn" type="submit" onclick="return false">Guardar</button>
+    <button id="crud-cancel-btn" class="crud-btn" type="reset">Cancelar</button>
+  </form>
+{% endblock %}
+
+{% block bodyscript %}
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js" integrity="sha384-feJI7QwhOS+hwpX2zkaeJQjeiwlhOP+SdQDqhgvvo1DsjtiSQByFdThsxO669S2D" crossorigin="anonymous"></script>
+{% endblock %}

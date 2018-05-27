@@ -1,0 +1,7 @@
+body {
+  background-image: url('../images/bg-top.png'), url('../images/bg.jpg');
+  background-size: 100%, 50%;
+  background-repeat: no-repeat, repeat;
+  background-position: center top, center top;
+  resize: both;
+}
