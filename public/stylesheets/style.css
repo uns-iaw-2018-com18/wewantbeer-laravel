@@ -766,12 +766,6 @@ input:-webkit-autofill {
 
 /* CRUD */
 
-#crud-title {
-  display: block;
-  margin: 10px;
-  font-size: 32px;
-}
-
 .crud-input {
   height: 50px;
   width: 790px;
@@ -848,6 +842,10 @@ input:-webkit-autofill {
     outline: none;
   }
 
+#crud-phone-value {
+  display: none;
+}
+
 #crud-phone-input {
   width: 630px;
   float: right;
@@ -885,16 +883,16 @@ input:-webkit-autofill {
     background-color: lightgray;
   }
 
-  .day-container {
-      position: relative;
-      padding-left: 40px;
-      top: 3px;
-      cursor: pointer;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-      user-select: none;
-  }
+.day-container {
+    position: relative;
+    padding-left: 40px;
+    top: 3px;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
 
   .day-container input {
       position: absolute;
@@ -902,14 +900,14 @@ input:-webkit-autofill {
       cursor: pointer;
   }
 
-  .checkmark {
-      position: absolute;
-      top: 10px;
-      left: 0;
-      height: 25px;
-      width: 25px;
-      background-color: lightgray;
-  }
+.checkmark {
+    position: absolute;
+    top: 10px;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: lightgray;
+}
 
   .day-container:hover input ~ .checkmark {
       background-color: gray;
@@ -941,71 +939,93 @@ input:-webkit-autofill {
       transform: rotate(45deg);
   }
 
-  .file-field {
-    height: 50px;
-    width: 790px;
-    position: relative;
-    display: inline-block;
-    margin: 10px;
-    font-size: 28px;
+#img-container {
+  height: 300px;
+  width: 790px;
+  display: block;
+  margin: 10px;
+}
+
+#logo-container {
+  height: 250px;
+  width: 250px;
+  display: inline-block;
+  background-color: lightgray;
+  float: left;
+}
+
+#picture-container {
+  height: 250px;
+  width: 520px;
+  display: inline-block;
+  background-color: lightgray;
+  float: right;
+}
+
+#logo-img {
+  height: 250px;
+  width: 250px;
+  display: block;
+}
+
+#picture-img {
+  height: 250px;
+  width: 520px;
+  display: block;
+}
+
+.file-field {
+  height: 50px;
+  width: 100%;
+  position: relative;
+  display: block;
+  font-size: 28px;
+}
+
+.file-btn {
+  line-height: 48px;
+  height: 50px;
+  width: 100%;
+  font-size: 28px;
+  background-color: gray;
+  color: white;
+  text-align: center;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+  .file-btn:hover {
+    background-color: dimgray;
   }
 
-  .file-path-wrapper {
-    overflow: hidden;
-  }
-
-  input.file-path {
-    height: 50px;
-    width: 100%;
-    padding: 0 0 0 20px;
-    border: 1px solid lightgray;
-  }
-
-  .file-btn {
-    float: left;
-    line-height: 48px;
-    height: 50px;
-    width: 120px;
-    font-size: 28px;
-    background-color: gray;
-    color: white;
-    text-align: center;
-    cursor: pointer;
-    border: none;
+  .file-btn:focus {
     outline: none;
-    -webkit-transition: .4s;
-    transition: .4s;
   }
 
-    .file-btn:hover {
-      background-color: dimgray;
-    }
+.file-field span {
+  cursor: pointer;
+}
 
-    .file-btn:focus {
-      outline: none;
-    }
+.file-field input[type=file] {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+  opacity: 0;
+  filter: alpha(opacity=0);
+}
 
-  .file-field span {
-    cursor: pointer;
-  }
-
-  .file-field input[type=file] {
-    position: absolute;
-    top: 0;
-    right: 0;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    cursor: pointer;
-    opacity: 0;
-    filter: alpha(opacity=0);
-  }
-
-  .file-field input[type=file]::-webkit-file-upload-button {
-    display: none;
-  }
+.file-field input[type=file]::-webkit-file-upload-button {
+  display: none;
+}
 
 /* Librerias */
 
