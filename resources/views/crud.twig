@@ -9,6 +9,14 @@
   <script src="../public/javascripts/crud-actions.js"></script>
 {% endblock %}
 
+{% block buttons %}
+<div id="top-navbar">
+  <form action="logout" method="POST">
+    <a id="login-btn" href="#" onclick="this.parentNode.submit()">Logout</a>
+  </form>
+</div>
+{% endblock %}
+
 {% block content %}
   <span id="crud-title">Agregar cervecería</span>
   <form id="crud-form">

@@ -12,7 +12,7 @@
 */
 
 Route::get('/', function () {
-    return view('index');
+    return redirect('login');
 });
 
 Route::get('/crud', function () {
