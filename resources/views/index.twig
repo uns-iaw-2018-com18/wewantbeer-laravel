@@ -12,8 +12,10 @@
 
 
 {% block content %}
-  {% if loginError %}
-  <span class="login-signup-error-message">{{loginError}}</span>
+  {% if errors.any() %}
+    <span class="login-signup-error-message">
+      {{errors.first()}}
+    </span>
   {% endif %}
   <form id="login-form" action="login" method="post">
     <input class="login-signup-input" type="text" name="email" placeholder="Usuario" maxlength="32" autofocus="autofocus">
