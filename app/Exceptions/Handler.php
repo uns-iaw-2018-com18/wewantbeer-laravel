@@ -4,7 +4,7 @@ namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-
+use Illuminate\Auth\AuthenticationException;
 class Handler extends ExceptionHandler
 {
     /**
@@ -15,6 +15,15 @@ class Handler extends ExceptionHandler
     protected $dontReport = [
         //
     ];
+
+
+
+      protected function unauthenticated($request, AuthenticationException $exception)
+      {
+        return $request->expectsJson()
+                ? response()->json(['message' => $exception->getMessage()], 401)
+                : redirect()->guest('/home');
+      }
 
     /**
      * A list of the inputs that are never flashed for validation exceptions.
