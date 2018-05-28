@@ -1,0 +1,15 @@
+{% extends 'layout.twig' %}
+
+{% block buttons %}
+<div id="top-navbar">
+  <form action="logout" method="POST">
+    <a id="login-btn" href="#" onclick="this.parentNode.submit()">Logout</a>
+  </form>
+</div>
+{% endblock %}
+
+{% block content %}
+  <a class="admin-btn" href="add">Agregar cervecería</a>
+  <a class="admin-btn" href="#">Editar cervecería</a>
+  <a class="admin-btn" href="#">Eliminar cervecería</a>
+{% endblock %}

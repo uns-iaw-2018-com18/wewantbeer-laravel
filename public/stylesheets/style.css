@@ -1027,6 +1027,31 @@ input:-webkit-autofill {
   display: none;
 }
 
+/* Admin */
+
+.admin-btn {
+  height: 50px;
+  width: 790px;
+  display: inline-block;
+  margin: 10px;
+  padding: 3px 0 0 0;
+  font-size: 28px;
+  background-color: gray;
+  color: white;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  text-align: center;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+  .admin-btn:hover {
+    color: white;
+    background-color: dimgray;
+    text-decoration: none;
+  }
+
 /* Librerias */
 
 .ui-autocomplete {

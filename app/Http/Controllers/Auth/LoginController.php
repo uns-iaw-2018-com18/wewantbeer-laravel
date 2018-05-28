@@ -36,8 +36,8 @@ class LoginController extends Controller
      * @var string
      */
     //protected $redirectTo = '/crud';
-    protected function authenticated(Request $request, $user){
-      return redirect('/crud');
+    protected function authenticated(Request $request, $user) {
+      return redirect('/admin');
     }
     /**
      * Create a new controller instance.

@@ -19,7 +19,7 @@ class RedirectIfAuthenticated
     {
       //Esto lo comente porque sino me pasaba que redireccionaba si estaba autenticado, pero quiero autenticar cada vez que voy al formulario
         if (Auth::guard($guard)->check()) {
-            return redirect('/crud');
+            return redirect('/admin');
         }
 
         return $next($request);

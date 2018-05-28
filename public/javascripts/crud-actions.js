@@ -34,6 +34,11 @@ $(function() {
       }
     });
   });
+  // Boton cancelar
+  $("#crud-cancel-btn").click(function(event) {
+    event.preventDefault();
+    window.location.href = "admin";
+  })
 });
 
 function previewImage(input, img, src) {
