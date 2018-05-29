@@ -77,10 +77,12 @@ class AddController extends Controller
       $prepAddr = str_replace(' ','+',$address);
       $geocode=file_get_contents('https://maps.google.com/maps/api/geocode/json?address='.$prepAddr.'&sensor=false');
       $output= json_decode($geocode);
-      if(isset($output->results)){
+      if(isset($output->status) && ($output->status == 'OK')){
         $latitude = $output->results[0]->geometry->location->lat;
         $longitude = $output->results[0]->geometry->location->lng;
         $cerveceria->latLong = array($latitude,$longitude);
+     }else{
+       //deberia tirar un error por dirección invalida?
      }
       $cerveceria->save();
       return 'Saved';
