@@ -34,6 +34,10 @@ $(function() {
       }
     });
   });
+  // Boton guardar
+  $("#crud-save-btn").click(function() {
+    $(this).attr("disabled", "disabled");
+  });
   // Boton cancelar
   $("#crud-cancel-btn").click(function(event) {
     event.preventDefault();

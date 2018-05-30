@@ -31,11 +31,27 @@ class AddController extends Controller {
       $cerveceria->email = $request->email;
       $cerveceria->facebook = $request->facebook;
       $cerveceria->instagram = $request->instagram;
+      if ($request->hasFile('logoImg')) {
+        $file = $request->file('logoImg');
+        $name = $file->getClientOriginalName();
+        $type = pathinfo($name, PATHINFO_EXTENSION);
+        $data = file_get_contents($file);
+        $base64 = "data:image/" . $type . ";base64," . base64_encode($data);
+        $cerveceria->logo = $base64;
+      }
+      if ($request->hasFile('fotoImg')) {
+        $file = $request->file('fotoImg');
+        $name = $file->getClientOriginalName();
+        $type = pathinfo($name, PATHINFO_EXTENSION);
+        $data = file_get_contents($file);
+        $base64 = "data:image/" . $type . ";base64," . base64_encode($data);
+        $cerveceria->foto = $base64;
+      }
       if (isset($request->happyCheck)) {
         $cerveceria->happyHour = $request->happyOpen."-".$request->happyClose;
       }
       $horarios = array();
-      //ahora para cada uno de los dias tengo que agregarlo al arrelgo
+      // Ahora para cada uno de los dias tengo que agregarlo al arreglo
       if (isset($request->domCheck)) {
         $horarios[0] = $request->domOpen."-".$request->domClose;
       } else {

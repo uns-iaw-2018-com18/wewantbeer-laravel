@@ -12,20 +12,20 @@
 {% block buttons %}
 <div id="top-navbar">
   <form action="logout" method="POST">
-    <a id="login-btn" href="#" onclick="this.parentNode.submit()">Logout</a>
+    <a id="login-btn" href="#" onclick="this.parentNode.submit()">Salir</a>
   </form>
 </div>
 {% endblock %}
 
 {% block content %}
-  <form id="crud-form" action="add" method="POST">
+  <form id="crud-form" action="add" method="POST" enctype="multipart/form-data">
     <div id="img-container">
       <div id="logo-container">
         <img id="logo-img" class="preview-img" src="../public/images/logo-ph.jpg">
         <div class="file-field">
           <div class="file-btn">
             <span>Logo</span>
-            <input id="logo-input" class="file-input" type="file" accept="image/jpeg">
+            <input id="logo-input" class="file-input" type="file" name="logoImg" accept="image/jpeg">
           </div>
         </div>
       </div>
@@ -34,7 +34,7 @@
         <div class="file-field">
           <div class="file-btn">
             <span>Foto</span>
-            <input id="picture-input" class="file-input" type="file" accept="image/jpeg">
+            <input id="picture-input" class="file-input" type="file" name="fotoImg" accept="image/jpeg">
           </div>
         </div>
       </div>
