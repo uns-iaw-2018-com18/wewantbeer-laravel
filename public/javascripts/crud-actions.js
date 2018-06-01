@@ -34,9 +34,10 @@ $(function() {
       }
     });
   });
-  // Boton guardar
-  $("#crud-save-btn").click(function() {
-    $(this).attr("disabled", "disabled");
+  // Deshabilitar boton guardar luego de enviar el formulario
+  $("#crud-form").submit(function() {
+    $("#crud-save-btn").attr("disabled", "disabled");
+    $("#crud-save-btn").css("cursor", "default");
   });
   // Boton cancelar
   $("#crud-cancel-btn").click(function(event) {
