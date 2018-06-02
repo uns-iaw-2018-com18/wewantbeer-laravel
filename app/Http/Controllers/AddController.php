@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Cerveceria;
+use Session;
 
 class AddController extends Controller {
+
+
     /**
      * Show the profile for the given user.
      *
@@ -14,24 +17,43 @@ class AddController extends Controller {
      * @return Response
      */
     public function add(Request $request) {
-      // Falta chequear si los campos estan vacios
-      // En ese caso no hay que agregarlos
-
+      $error=$this->chequeos($request);
+      if(!($error === NULL))
+        return redirect('admin/add')->withErrors([$error]);
       $cerveceria = new Cerveceria();
       $cerveceria->id = strtolower(preg_replace("/\s+/", "_", $request->nombre));
       $cerveceria->nombre = $request->nombre;
       $cerveceria->direccion = $request->direccion;
-      $tipoTelefono = $request->tipoTel;
-      if ($tipoTelefono == "0") {
-        $cerveceria->telefono = "+54291".$request->telefono;
-      } else {
-        $cerveceria->telefono = "+549291".$request->telefono;
+      if(!empty($cerveceria->telefono)){
+        $tipoTelefono = $request->tipoTel;
+        if ($tipoTelefono == "0") {
+          $cerveceria->telefono = "+54291".$request->telefono;
+        } else {
+          $cerveceria->telefono = "+549291".$request->telefono;
+        }
+      }else{
+        $cerveceria->telefono = "";
       }
-      $cerveceria->web = $request->web;
-      $cerveceria->email = $request->email;
-      $cerveceria->facebook = $request->facebook;
-      $cerveceria->instagram = $request->instagram;
-
+      if(!empty($request->web))
+        $cerveceria->web = $request->web;
+      else{
+        $cerveceria->web = "";
+      }
+      if(!empty($request->email))
+        $cerveceria->email = $request->email;
+      else {
+        $cerveceria->email = "";
+      }
+      if(!empty($request->facebook))
+        $cerveceria->facebook = $request->facebook;
+      else {
+        $cerveceria->facebook = "";
+      }
+      if(!empty($request->instagram))
+        $cerveceria->instagram = $request->instagram;
+      else {
+        $cerveceria->instagram= "";
+      }
       // Obtener access_token a partir del refresh_token
       $curl = curl_init();
       curl_setopt($curl, CURLOPT_URL, "https://api.imgur.com/oauth2/token");
@@ -157,9 +179,119 @@ class AddController extends Controller {
       }
 
       $cerveceria->save();
+      //Session::flash('message', 'This is a message!');
+      // $request->session()->flash('message', 'Task was successful!');
       return redirect('admin');
     }
 
+    public function chequeos($request){
+        //---------------Chequeos del logo
+        if(empty($request->logoImg))
+          return "Debe haber un logo";
+        // Get Image Dimension
+        $fileLogo = $request->file("logoImg");
+        $fileinfo = @getimagesize($fileLogo);
+        $width = $fileinfo[0];
+        $height = $fileinfo[1];
+        // Get image file extension
+        $file_extension = pathinfo($fileLogo->getClientOriginalName(), PATHINFO_EXTENSION);
+        // Validate image file extension
+        if ($file_extension!="jpg") {
+            return "La imagen del logo debe tener la extensión .jpg";
+        }
+        // Validate image file dimension
+         if ($width != "250" || $height != "250") {
+          return "La imagen del logo debe tener las dimensiones 250x250";
+        }
+        //---------------fin de chequeo del logo
+
+        //---------------Chequeos de la foto
+        if(empty($request->fotoImg))
+          return "Debe haber una foto";
+        // Get Image Dimension
+        $fileFoto = $request->file("fotoImg");
+        $fileinfo = @getimagesize($fileFoto);
+        $width = $fileinfo[0];
+        $height = $fileinfo[1];
+        // Get image file extension
+        $file_extension = pathinfo($fileFoto->getClientOriginalName(), PATHINFO_EXTENSION);
+        // Validate image file extension
+        if ($file_extension!="jpg") {
+            return "La imagen de la foto debe tener la extensión .jpg";
+        }
+        // Validate image file dimension
+         if ($width != "520" || $height != "250") {
+          return "La imagen de la foto debe tener las dimensiones 520x250 ".$width." ".$height;
+        }
+        //---------------fin de chequeo de la foto
+        if(empty($request->nombre))
+          return "El nombre no debe estar vacío";
+        $id = strtolower(preg_replace("/\s+/", "_", $request->nombre));
+        $cerveceria = Cerveceria::where('id',$id)->get();
+        if(isset($cerveceria[0]))
+          return "Ya existe una cerveceria con el nombre ".$request->nombre;
+        if(empty($request->direccion))
+          return "La dirección no debe estar vacía";
+
+        if (isset($request->domCheck)) {
+          if(!isset($request->domOpen) || !isset($request->domClose)){
+            return "Se deben setear los horarios del día domingo";
+          }
+          if($request->domOpen==$request->domClose)
+            return "El horario de comienzo y fin del domingo no debe ser el mismo";
+        }
+        if (isset($request->lunCheck)) {
+          if(!isset($request->lunOpen) || !isset($request->lunClose)){
+            return "Se deben setear los horarios del día lunes";
+          }
+          if($request->lunOpen==$request->lunClose)
+            return "El horario de comienzo y fin del lunes no debe ser el mismo";
+        }
+        if (isset($request->marCheck)) {
+          if(!isset($request->marOpen) || !isset($request->marClose)){
+            return "Se deben setear los horarios del día martes";
+          }
+          if($request->marOpen==$request->marClose)
+            return "El horario de comienzo y fin del martes no debe ser el mismo";
+        }
+        if (isset($request->mieCheck)) {
+          if(!isset($request->mieOpen) || !isset($request->mieClose)){
+            return "Se deben setear los horarios del día miércoles";
+          }
+          if($request->mieOpen==$request->mieClose)
+            return "El horario de comienzo y fin del Miércoles no debe ser el mismo";
+        }
+        if (isset($request->jueCheck)) {
+          if(!isset($request->jueOpen) || !isset($request->jueClose)){
+            return "Se deben setear los horarios del día jueves";
+          }
+          if($request->jueOpen==$request->jueClose)
+            return "El horario de comienzo y fin del jueves no debe ser el mismo";
+        }
+        if (isset($request->vieCheck)) {
+          if(!isset($request->vieOpen) || !isset($request->vieClose)){
+            return "Se deben setear los horarios del día viernes";
+          }
+          if($request->vieOpen==$request->vieClose)
+            return "El horario de comienzo y fin del viernes no debe ser el mismo";
+        }
+        if (isset($request->sabCheck)) {
+          if(!isset($request->sabOpen) || !isset($request->sabClose)){
+            return "Se deben setear los horarios del día sábado";
+          }
+          if($request->sabOpen==$request->sabClose)
+            return "El horario de comienzo y fin del sábado no debe ser el mismo";
+        }
+        if (isset($request->happyCheck)) {
+          if(!isset($request->happyOpen) || !isset($request->happyClose)){
+            return "Se deben setear los horarios del happy hour";
+          }
+          if($request->happyOpen==$request->happyClose)
+            return "El horario de comienzo y fin del happy hour no debe ser el mismo";
+        }
+        return null;
+
+    }
     /**
     * Instantiate a new controller instance.
     *

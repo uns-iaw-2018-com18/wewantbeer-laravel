@@ -9,7 +9,9 @@
 {% endblock %}
 
 {% block content %}
-  <a class="admin-btn" href="add">Agregar cervecería</a>
+
+  {{ app.session.get('message') }}
+  <a class="admin-btn" href="/admin/add">Agregar cervecería</a>
   <a class="admin-btn" href="#">Editar cervecería</a>
   <a class="admin-btn" href="#">Eliminar cervecería</a>
 {% endblock %}

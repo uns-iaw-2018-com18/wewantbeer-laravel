@@ -42,7 +42,7 @@ $(function() {
   // Boton cancelar
   $("#crud-cancel-btn").click(function(event) {
     event.preventDefault();
-    window.location.href = "admin";
+    window.location.href = "/admin";
   })
 });
 

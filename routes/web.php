@@ -19,11 +19,11 @@ Route::get('/admin', function() {
     return view('admin');
 }) -> middleware('auth');
 
-Route::get('/add', function() {
+Route::get('/admin/add', function() {
     return view('crud');
 }) -> middleware('auth');
 
-Route::post('add','AddController@add');
+Route::post('/admin/add','AddController@add');
 
 // Authentication Routes...
 Route::get('login', 'Auth\LoginController@showLoginForm') -> name('login');
