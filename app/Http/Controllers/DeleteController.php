@@ -8,6 +8,15 @@ use App\Cerveceria;
 
 class DeleteController extends Controller {
 
+  public function selectDelete() {
+    $cervecerias = Cerveceria::all('id', 'nombre')->makeHidden('_id');
+    $cervecerias = json_decode($cervecerias, true);
+    usort($cervecerias, function($a, $b) {
+      return strcmp($a['nombre'], $b['nombre']);
+    });
+    return view('select')->with(['cervecerias' => $cervecerias, 'opcion' => 'delete']);
+  }
+
   public function delete(String $id) {
     $cerveceria = Cerveceria::where('id', $id)->get()[0];
     if (isset($cerveceria)) {

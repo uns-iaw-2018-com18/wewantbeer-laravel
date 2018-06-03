@@ -27,17 +27,13 @@ Route::group(['prefix' => '/admin'], function() {
 
   Route::post('/add', 'AddController@add');
 
-  Route::get('/edit', function() {
-    return view('edit');
-  }) -> middleware('auth');
+  Route::get('/edit', 'EditController@selectEdit') -> middleware('auth');
 
   Route::get('/edit/{id}', 'EditController@getEdit') -> middleware('auth');
 
   Route::post('/edit/{id}', 'EditController@edit') -> middleware('auth');
 
-  Route::get('/delete', function() {
-    return view('admin');
-  }) -> middleware('auth');
+  Route::get('/delete', 'DeleteController@selectDelete') -> middleware('auth');
 
   // Cambiar a POST
   Route::get('/delete/{id}', 'DeleteController@delete') -> middleware('auth');
