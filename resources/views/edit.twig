@@ -1,0 +1,254 @@
+{% extends 'layout.twig' %}
+
+{% block stylesheet %}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css" integrity="sha256-DVV5cU9pxHH2Rofop3XD3b3rbfrOSIy2nU61DEbYy1Q=" crossorigin="anonymous">
+{% endblock %}
+
+{% block javascript %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js" integrity="sha256-+jmym6PChFok5u02khNcYDy5AdfiIN7Y/QCbBqiNgeE=" crossorigin="anonymous"></script>
+  <script src="/javascripts/crud-actions.js"></script>
+{% endblock %}
+
+{% block buttons %}
+<div id="top-navbar">
+  <form action="logout" method="POST">
+    <a id="login-btn" href="#" onclick="this.parentNode.submit()">Salir</a>
+  </form>
+</div>
+{% endblock %}
+
+{% block content %}
+  <form id="crud-form" action="/admin/edit/{{ cerveceria.id }}" method="POST" enctype="multipart/form-data">
+    <div id="img-container">
+      <div id="logo-container">
+        {% if cerveceria.logo %}
+          <img id="logo-img" class="preview-img" src="{{ cerveceria.logo }}">
+        {% else %}
+          <img id="logo-img" class="preview-img" src="/images/logo-ph.jpg">
+        {% endif %}
+        <div class="file-field">
+          <div class="file-btn">
+            <span>Logo</span>
+            <input id="logo-input" class="file-input" type="file" name="logoImg" accept="image/jpeg">
+          </div>
+        </div>
+      </div>
+      <div id="picture-container">
+        {% if cerveceria.foto %}
+          <img id="picture-img" class="preview-img" src="{{ cerveceria.foto }}">
+        {% else %}
+          <img id="picture-img" class="preview-img" src="/images/picture-ph.jpg">
+        {% endif %}
+        <div class="file-field">
+          <div class="file-btn">
+            <span>Foto</span>
+            <input id="picture-input" class="file-input" type="file" name="fotoImg" accept="image/jpeg">
+          </div>
+        </div>
+      </div>
+    </div>
+    {% if cerveceria.nombre %}
+      <input class="crud-input" name="nombre" type="text" placeholder="Nombre" value="{{ cerveceria.nombre }}" maxlength="64">
+    {% else %}
+      <input class="crud-input" name="nombre" type="text" placeholder="Nombre" maxlength="64">
+    {% endif %}
+    {% if cerveceria.direccion %}
+      <input class="crud-input" name="direccion" type="text" placeholder="Dirección" value="{{ cerveceria.direccion }}" maxlength="64">
+    {% else %}
+      <input class="crud-input" name="direccion" type="text" placeholder="Dirección" maxlength="64">
+    {% endif %}
+    <div class="dropdown">
+      {% if cerveceria.telefono %}
+        {% if tipo == 0 %}
+          <button id="phone-select" class="dropdown-toggle" data-toggle="dropdown">Fijo</button>
+        {% else %}
+          <button id="phone-select" class="dropdown-toggle" data-toggle="dropdown">Móvil</button>
+        {% endif %}
+      {% else %}
+        <button id="phone-select" class="dropdown-toggle" data-toggle="dropdown">Fijo</button>
+      {% endif %}
+      <ul class="dropdown-menu">
+        <a class="dropdown-item" value="0" href="#">Fijo</a>
+        <a class="dropdown-item" value="1" href="#">Móvil</a>
+      </ul>
+    </div>
+    <input name="tipoTel" id="crud-phone-value" type="text" value="0" maxlength="1">
+    {% if cerveceria.telefono %}
+      <input id="crud-phone-input" name="telefono" class="crud-input" type="text" placeholder="Teléfono" value="{{ telefono }}" maxlength="64">
+    {% else %}
+      <input id="crud-phone-input" name="telefono" class="crud-input" type="text" placeholder="Teléfono" maxlength="64">
+    {% endif %}
+    <div class="daytime-box">
+      <label class="day-container">Domingo
+        {% if cerveceria.horario[0] != "Cerrado" %}
+          <input class="day-check" name="domCheck" type="checkbox" checked="checked">
+        {% else %}
+          <input class="day-check" name="domCheck" type="checkbox">
+        {% endif %}
+        <span class="checkmark"></span>
+      </label>
+      <div class="daytime-input-container">
+        {% if cerveceria.horario[0] != "Cerrado" %}
+          {% set dom = cerveceria.horario[0]|split('-') %}
+          <input class="daytime-input timepicker" name="domOpen" type="text" placeholder="00:00" value="{{ dom[0] }}"><input class="daytime-input timepicker" name="domClose" type="text" placeholder="00:00" value="{{ dom[1] }}">
+        {% else %}
+          <input class="daytime-input timepicker" name="domOpen" type="text" placeholder="00:00" disabled="disabled"><input class="daytime-input timepicker" name="domClose" type="text" placeholder="00:00" disabled="disabled">
+        {% endif %}
+      </div>
+    </div>
+    <div class="daytime-box">
+      <label class="day-container">Lunes
+        {% if cerveceria.horario[1] != "Cerrado" %}
+          <input class="day-check" name="lunCheck" type="checkbox" checked="checked">
+        {% else %}
+          <input class="day-check" name="lunCheck" type="checkbox">
+        {% endif %}
+        <span class="checkmark"></span>
+      </label>
+      <div class="daytime-input-container">
+        {% if cerveceria.horario[1] != "Cerrado" %}
+          {% set lun = cerveceria.horario[1]|split('-') %}
+          <input class="daytime-input timepicker" name="lunOpen" type="text" placeholder="00:00" value="{{ lun[0] }}"><input class="daytime-input timepicker" name="lunClose" type="text" placeholder="00:00" value="{{ lun[1] }}">
+        {% else %}
+          <input class="daytime-input timepicker" name="lunOpen" type="text" placeholder="00:00" disabled="disabled"><input class="daytime-input timepicker" name="lunClose" type="text" placeholder="00:00" disabled="disabled">
+        {% endif %}
+      </div>
+    </div>
+    <div class="daytime-box">
+      <label class="day-container">Martes
+        {% if cerveceria.horario[2] != "Cerrado" %}
+          <input class="day-check" name="marCheck" type="checkbox" checked="checked">
+        {% else %}
+          <input class="day-check" name="marCheck" type="checkbox">
+        {% endif %}
+        <span class="checkmark"></span>
+      </label>
+      <div class="daytime-input-container">
+        {% if cerveceria.horario[2] != "Cerrado" %}
+          {% set mar = cerveceria.horario[2]|split('-') %}
+          <input class="daytime-input timepicker" name="marOpen" type="text" placeholder="00:00" value="{{ mar[0] }}"><input class="daytime-input timepicker" name="marClose" type="text" placeholder="00:00" value="{{ mar[1] }}">
+        {% else %}
+          <input class="daytime-input timepicker" name="marOpen" type="text" placeholder="00:00" disabled="disabled"><input class="daytime-input timepicker" name="marClose" type="text" placeholder="00:00" disabled="disabled">
+        {% endif %}
+      </div>
+    </div>
+    <div class="daytime-box">
+      <label class="day-container">Miércoles
+        {% if cerveceria.horario[3] != "Cerrado" %}
+          <input class="day-check" name="mieCheck" type="checkbox" checked="checked">
+        {% else %}
+          <input class="day-check" name="mieCheck" type="checkbox">
+        {% endif %}
+        <span class="checkmark"></span>
+      </label>
+      <div class="daytime-input-container">
+        {% if cerveceria.horario[3] != "Cerrado" %}
+          {% set mie = cerveceria.horario[3]|split('-') %}
+          <input class="daytime-input timepicker" name="mieOpen" type="text" placeholder="00:00" value="{{ mie[0] }}"><input class="daytime-input timepicker" name="mieClose" type="text" placeholder="00:00" value="{{ mie[1] }}">
+        {% else %}
+          <input class="daytime-input timepicker" name="mieOpen" type="text" placeholder="00:00" disabled="disabled"><input class="daytime-input timepicker" name="mieClose" type="text" placeholder="00:00" disabled="disabled">
+        {% endif %}
+      </div>
+    </div>
+    <div class="daytime-box">
+      <label class="day-container">Jueves
+        {% if cerveceria.horario[4] != "Cerrado" %}
+          <input class="day-check" name="jueCheck" type="checkbox" checked="checked">
+        {% else %}
+          <input class="day-check" name="jueCheck" type="checkbox">
+        {% endif %}
+        <span class="checkmark"></span>
+      </label>
+      <div class="daytime-input-container">
+        {% if cerveceria.horario[4] != "Cerrado" %}
+          {% set jue = cerveceria.horario[4]|split('-') %}
+          <input class="daytime-input timepicker" name="jueOpen" type="text" placeholder="00:00" value="{{ jue[0] }}"><input class="daytime-input timepicker" name="jueClose" type="text" placeholder="00:00" value="{{ jue[1] }}">
+        {% else %}
+          <input class="daytime-input timepicker" name="jueOpen" type="text" placeholder="00:00" disabled="disabled"><input class="daytime-input timepicker" name="jueClose" type="text" placeholder="00:00" disabled="disabled">
+        {% endif %}
+      </div>
+    </div>
+    <div class="daytime-box">
+      <label class="day-container">Viernes
+        {% if cerveceria.horario[5] != "Cerrado" %}
+          <input class="day-check" name="vieCheck" type="checkbox" checked="checked">
+        {% else %}
+          <input class="day-check" name="vieCheck" type="checkbox">
+        {% endif %}
+        <span class="checkmark"></span>
+      </label>
+      <div class="daytime-input-container">
+        {% if cerveceria.horario[5] != "Cerrado" %}
+          {% set vie = cerveceria.horario[5]|split('-') %}
+          <input class="daytime-input timepicker" name="vieOpen" type="text" placeholder="00:00" value="{{ vie[0] }}"><input class="daytime-input timepicker" name="vieClose" type="text" placeholder="00:00" value="{{ vie[1] }}">
+        {% else %}
+          <input class="daytime-input timepicker" name="vieOpen" type="text" placeholder="00:00" disabled="disabled"><input class="daytime-input timepicker" name="vieClose" type="text" placeholder="00:00" disabled="disabled">
+        {% endif %}
+      </div>
+    </div>
+    <div class="daytime-box">
+      <label class="day-container">Sábado
+        {% if cerveceria.horario[6] != "Cerrado" %}
+          <input class="day-check" name="sabCheck" type="checkbox" checked="checked">
+        {% else %}
+          <input class="day-check" name="sabCheck" type="checkbox">
+        {% endif %}
+        <span class="checkmark"></span>
+      </label>
+      <div class="daytime-input-container">
+        {% if cerveceria.horario[6] != "Cerrado" %}
+          {% set sab = cerveceria.horario[6]|split('-') %}
+          <input class="daytime-input timepicker" name="sabOpen" type="text" placeholder="00:00" value="{{ sab[0] }}"><input class="daytime-input timepicker" name="sabClose" type="text" placeholder="00:00" value="{{ sab[1] }}">
+        {% else %}
+          <input class="daytime-input timepicker" name="sabOpen" type="text" placeholder="00:00" disabled="disabled"><input class="daytime-input timepicker" name="sabClose" type="text" placeholder="00:00" disabled="disabled">
+        {% endif %}
+      </div>
+    </div>
+    <div class="daytime-box">
+      <label class="day-container">Happy hour
+        {% if cerveceria.happyHour != "" %}
+          <input class="day-check" name="happyCheck" type="checkbox" checked="checked">
+        {% else %}
+          <input class="day-check" name="happyCheck" type="checkbox">
+        {% endif %}
+        <span class="checkmark"></span>
+      </label>
+      <div class="daytime-input-container">
+        {% if cerveceria.happyHour != "" %}
+          {% set hh = cerveceria.happyHour|split('-') %}
+          <input class="daytime-input timepicker" name="happyOpen" type="text" placeholder="00:00" value="{{ hh[0] }}"><input class="daytime-input timepicker" name="happyClose" type="text" placeholder="00:00" value="{{ hh[1] }}">
+        {% else %}
+          <input class="daytime-input timepicker" name="happyOpen" type="text" placeholder="00:00" disabled="disabled"><input class="daytime-input timepicker" name="happyClose" type="text" placeholder="00:00" disabled="disabled">
+        {% endif %}
+      </div>
+    </div>
+    {% if cerveceria.web %}
+      <input class="crud-input" name="web" type="text" placeholder="Web" maxlength="64" value="{{ cerveceria.web }}">
+    {% else %}
+      <input class="crud-input" name="web" type="text" placeholder="Web" maxlength="64">
+    {% endif %}
+    {% if cerveceria.email %}
+      <input class="crud-input" name="email" type="text" placeholder="Email" maxlength="64" value="{{ cerveceria.email }}">
+    {% else %}
+      <input class="crud-input" name="email" type="text" placeholder="Email" maxlength="64">
+    {% endif %}
+    {% if cerveceria.facebook %}
+      <input id="crud-social-facebook-input" name="facebook" class="crud-input" type="text" maxlength="64" value="{{ cerveceria.facebook }}">
+    {% else %}
+      <input id="crud-social-facebook-input" name="facebook" class="crud-input" type="text" maxlength="64">
+    {% endif %}
+    <label class="static-input-value" for="crud-social-facebook-input">www.facebook.com/</label>
+    {% if cerveceria.instagram %}
+      <input id="crud-social-instagram-input" name="instagram" class="crud-input" type="text" maxlength="64" value="{{ cerveceria.instagram }}">
+    {% else %}
+      <input id="crud-social-instagram-input" name="instagram" class="crud-input" type="text" maxlength="64">
+    {% endif %}
+    <label class="static-input-value" for="crud-social-instagram-input">www.instagram.com/</label>
+    <button id="crud-save-btn" class="crud-btn" type="submit">Guardar</button>
+    <button id="crud-cancel-btn" class="crud-btn">Cancelar</button>
+  </form>
+{% endblock %}
+
+{% block bodyscript %}
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js" integrity="sha384-feJI7QwhOS+hwpX2zkaeJQjeiwlhOP+SdQDqhgvvo1DsjtiSQByFdThsxO669S2D" crossorigin="anonymous"></script>
+{% endblock %}

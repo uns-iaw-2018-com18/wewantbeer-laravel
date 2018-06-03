@@ -15,15 +15,25 @@ Route::get('/', function() {
     return redirect('login');
 });
 
-Route::get('/admin', function() {
-    return view('admin');
-}) -> middleware('auth');
+Route::group(['prefix' => '/admin'], function() {
 
-Route::get('/add', function() {
-    return view('crud');
-}) -> middleware('auth');
+  Route::get('/', function() {
+      return view('admin');
+  }) -> middleware('auth');
 
-Route::post('add','AddController@add');
+  Route::get('/add', function() {
+      return view('add');
+  }) -> middleware('auth');
+
+  Route::post('/add','AddController@add');
+
+  Route::get('/edit', function() {
+      return view('edit');
+  }) -> middleware('auth');
+
+  Route::get('/edit/{id}', 'EditController@getEdit') -> middleware('auth');
+
+});
 
 // Authentication Routes...
 Route::get('login', 'Auth\LoginController@showLoginForm') -> name('login');
