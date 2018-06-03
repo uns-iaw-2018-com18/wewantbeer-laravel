@@ -17,6 +17,7 @@ Route::get('/', function() {
 
 Route::group(['prefix' => '/admin'], function() {
 
+<<<<<<< HEAD
   Route::get('/', function() {
       return view('admin');
   }) -> middleware('auth');
@@ -34,6 +35,13 @@ Route::group(['prefix' => '/admin'], function() {
   Route::get('/edit/{id}', 'EditController@getEdit') -> middleware('auth');
 
 });
+=======
+Route::get('/admin/add', function() {
+    return view('crud');
+}) -> middleware('auth');
+
+Route::post('/admin/add','AddController@add');
+>>>>>>> b2379886541a4228cdaae2b1290ff0dfaaa458d0
 
 // Authentication Routes...
 Route::get('login', 'Auth\LoginController@showLoginForm') -> name('login');
