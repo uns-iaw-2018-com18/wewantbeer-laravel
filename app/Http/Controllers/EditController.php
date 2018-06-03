@@ -8,7 +8,7 @@ use App\Cerveceria;
 
 class EditController extends Controller {
 
-  public function getEdit($id) {
+  public function getEdit(String $id) {
     $cerveceria = Cerveceria::where('id', $id)->get()[0];
     if (isset($cerveceria)) {
       if ($cerveceria['telefono'] != "") {
@@ -24,6 +24,22 @@ class EditController extends Controller {
       } else {
         return view('edit')->with(['cerveceria' => $cerveceria]);
       }
+    } else {
+      return redirect('admin');
+    }
+  }
+
+  public function edit(Request $request, String $id) {
+    $cerveceria = Cerveceria::where('id', $id)->get()[0];
+    if (isset($cerveceria)) {
+      $cerveceria->id = strtolower(preg_replace("/\s+/", "_", $request->nombre));
+      $cerveceria->nombre = $request->nombre;
+      $cerveceria->direccion = $request->direccion;
+
+      // Agregar los otros campos
+
+      $cerveceria->save();
+      return redirect('admin');
     } else {
       return redirect('admin');
     }

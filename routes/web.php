@@ -12,36 +12,37 @@
 */
 
 Route::get('/', function() {
-    return redirect('login');
+  return redirect('login');
 });
 
 Route::group(['prefix' => '/admin'], function() {
 
-<<<<<<< HEAD
   Route::get('/', function() {
-      return view('admin');
+    return view('admin');
   }) -> middleware('auth');
 
   Route::get('/add', function() {
-      return view('add');
+    return view('add');
   }) -> middleware('auth');
 
-  Route::post('/add','AddController@add');
+  Route::post('/add', 'AddController@add');
 
   Route::get('/edit', function() {
-      return view('edit');
+    return view('edit');
   }) -> middleware('auth');
 
   Route::get('/edit/{id}', 'EditController@getEdit') -> middleware('auth');
 
-});
-=======
-Route::get('/admin/add', function() {
-    return view('crud');
-}) -> middleware('auth');
+  Route::post('/edit/{id}', 'EditController@edit') -> middleware('auth');
 
-Route::post('/admin/add','AddController@add');
->>>>>>> b2379886541a4228cdaae2b1290ff0dfaaa458d0
+  Route::get('/delete', function() {
+    return view('admin');
+  }) -> middleware('auth');
+
+  // Cambiar a POST
+  Route::get('/delete/{id}', 'DeleteController@delete') -> middleware('auth');
+
+});
 
 // Authentication Routes...
 Route::get('login', 'Auth\LoginController@showLoginForm') -> name('login');

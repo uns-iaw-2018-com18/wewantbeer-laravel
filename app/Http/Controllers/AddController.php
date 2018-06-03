@@ -17,41 +17,42 @@ class AddController extends Controller {
      * @return Response
      */
     public function add(Request $request) {
-      $error=$this->chequeos($request);
-      if(!($error === NULL))
+      $error = $this->chequeos($request);
+      if (!($error === NULL)) {
         return redirect('admin/add')->withErrors([$error]);
+      }
       $cerveceria = new Cerveceria();
       $cerveceria->id = strtolower(preg_replace("/\s+/", "_", $request->nombre));
       $cerveceria->nombre = $request->nombre;
       $cerveceria->direccion = $request->direccion;
-      if(!empty($cerveceria->telefono)){
+      if (!empty($request->telefono)) {
         $tipoTelefono = $request->tipoTel;
         if ($tipoTelefono == "0") {
-          $cerveceria->telefono = "+54291".$request->telefono;
+          $cerveceria->telefono = "+54291" . $request->telefono;
         } else {
-          $cerveceria->telefono = "+549291".$request->telefono;
+          $cerveceria->telefono = "+549291" . substr($request->telefono, 2, strlen($request->telefono));
         }
-      }else{
+      } else {
         $cerveceria->telefono = "";
       }
-      if(!empty($request->web))
+      if (!empty($request->web)) {
         $cerveceria->web = $request->web;
-      else{
+      } else {
         $cerveceria->web = "";
       }
-      if(!empty($request->email))
+      if (!empty($request->email)) {
         $cerveceria->email = $request->email;
-      else {
+      } else {
         $cerveceria->email = "";
       }
-      if(!empty($request->facebook))
+      if (!empty($request->facebook)) {
         $cerveceria->facebook = $request->facebook;
-      else {
+      } else {
         $cerveceria->facebook = "";
       }
-      if(!empty($request->instagram))
+      if (!empty($request->instagram)) {
         $cerveceria->instagram = $request->instagram;
-      else {
+      } else {
         $cerveceria->instagram= "";
       }
       // Obtener access_token a partir del refresh_token
@@ -83,8 +84,8 @@ class AddController extends Controller {
           $out = curl_exec($curl);
           curl_close($curl);
           $response = json_decode($out, true);
-          $link = $response["data"]["link"];
-          if ($link != "") {
+          if ($response["success"] == true) {
+            $link = $response["data"]["link"];
             $cerveceria->logo = $link;
           } else {
             // Mostrar mensaje de error
@@ -106,8 +107,8 @@ class AddController extends Controller {
           $out = curl_exec($curl);
           curl_close($curl);
           $response = json_decode($out, true);
-          $link = $response["data"]["link"];
-          if ($link != "") {
+          if ($response["success"] == true) {
+            $link = $response["data"]["link"];
             $cerveceria->foto = $link;
           } else {
             // Mostrar mensaje de error

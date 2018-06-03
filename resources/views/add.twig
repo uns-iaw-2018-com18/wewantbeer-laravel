@@ -6,11 +6,7 @@
 
 {% block javascript %}
   <script src="https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js" integrity="sha256-+jmym6PChFok5u02khNcYDy5AdfiIN7Y/QCbBqiNgeE=" crossorigin="anonymous"></script>
-<<<<<<< HEAD:resources/views/add.twig
   <script src="/javascripts/crud-actions.js"></script>
-=======
-  <script src="../javascripts/crud-actions.js"></script>
->>>>>>> b2379886541a4228cdaae2b1290ff0dfaaa458d0:resources/views/crud.twig
 {% endblock %}
 
 {% block buttons %}
@@ -22,22 +18,15 @@
 {% endblock %}
 
 {% block content %}
-<<<<<<< HEAD:resources/views/add.twig
+  {% if errors.any() %}
+    <span class="crud-error-message">
+      {{errors.first()}}
+    </span>
+  {% endif %}
   <form id="crud-form" action="/admin/add" method="POST" enctype="multipart/form-data">
     <div id="img-container">
       <div id="logo-container">
         <img id="logo-img" class="preview-img" src="/images/logo-ph.jpg">
-=======
-{% if errors.any() %}
-  <span class="login-signup-error-message">
-    {{errors.first()}}
-  </span>
-{% endif %}
-  <form id="crud-form" action="/admin/add" method="POST" enctype="multipart/form-data">
-    <div id="img-container">
-      <div id="logo-container">
-        <img id="logo-img" class="preview-img" src="../images/logo-ph.jpg">
->>>>>>> b2379886541a4228cdaae2b1290ff0dfaaa458d0:resources/views/crud.twig
         <div class="file-field">
           <div class="file-btn">
             <span>Logo</span>
@@ -46,11 +35,7 @@
         </div>
       </div>
       <div id="picture-container">
-<<<<<<< HEAD:resources/views/add.twig
         <img id="picture-img" class="preview-img" src="/images/picture-ph.jpg">
-=======
-        <img id="picture-img" class="preview-img" src="../images/picture-ph.jpg">
->>>>>>> b2379886541a4228cdaae2b1290ff0dfaaa458d0:resources/views/crud.twig
         <div class="file-field">
           <div class="file-btn">
             <span>Foto</span>
