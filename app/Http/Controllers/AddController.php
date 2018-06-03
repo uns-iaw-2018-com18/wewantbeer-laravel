@@ -9,20 +9,13 @@ use Session;
 
 class AddController extends Controller {
 
-
-    /**
-     * Show the profile for the given user.
-     *
-     * @param  int  $id
-     * @return Response
-     */
     public function add(Request $request) {
       $error = $this->chequeos($request);
       if (!($error === NULL)) {
         return redirect('admin/add')->withErrors([$error]);
       }
       $cerveceria = new Cerveceria();
-      $cerveceria->id = strtolower(preg_replace("/\s+/", "_", $request->nombre));
+      $cerveceria->id = strtolower(preg_replace("/\s+/", "_", $this->removeAccents($request->nombre)));
       $cerveceria->nombre = $request->nombre;
       $cerveceria->direccion = $request->direccion;
       if (!empty($request->telefono)) {
@@ -291,13 +284,20 @@ class AddController extends Controller {
             return "El horario de comienzo y fin del happy hour no debe ser el mismo";
         }
         return null;
-
     }
-    /**
-    * Instantiate a new controller instance.
-    *
-    * @return void
-    */
+
+    public function removeAccents($str) {
+      $accents = array( 'Á' => 'A', 'É' => 'E', 'Í' => 'I', 'Ó' => 'O', 'Ú' => 'U',
+                        'á' => 'a', 'é' => 'e', 'í' => 'i', 'ó' => 'o', 'ú' => 'u',
+                        'À' => 'A', 'È' => 'E', 'Ì' => 'I', 'Ò' => 'O', 'Ù' => 'U',
+                        'à' => 'a', 'è' => 'e', 'ì' => 'i', 'ò' => 'o', 'ù' => 'u',
+                        'Ä' => 'A', 'Ë' => 'E', 'Ï' => 'I', 'Ö' => 'O', 'Ü' => 'U',
+                        'ä' => 'a', 'ë' => 'e', 'ï' => 'i', 'ö' => 'o', 'ü' => 'u',
+                        'Ñ' => 'N', 'ñ' => 'n', 'Ç' => 'C', 'ç' => 'c' );
+
+      return strtr($str, $accents);
+    }
+
    public function __construct() {
        $this->middleware('auth');
    }
