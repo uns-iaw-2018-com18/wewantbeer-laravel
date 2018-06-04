@@ -23,7 +23,7 @@ class DeleteController extends Controller {
       // Eliminar imagenes
 
       $cerveceria->delete();
-      return redirect('admin');
+      return redirect('admin')->with(['mensaje' => 'La cervecería fue eliminada con éxito']);
     } else {
       return redirect('admin');
     }

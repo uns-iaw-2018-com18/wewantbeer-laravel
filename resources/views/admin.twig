@@ -9,6 +9,9 @@
 {% endblock %}
 
 {% block content %}
+  {% if app.session.get('mensaje') %}
+    <span class="crud-error-message">{{ app.session.get('mensaje') }}</span>
+  {% endif %}
   <a class="admin-btn" href="/admin/add">Agregar cervecería</a>
   <a class="admin-btn" href="/admin/edit">Editar cervecería</a>
   <a class="admin-btn" href="/admin/delete">Eliminar cervecería</a>

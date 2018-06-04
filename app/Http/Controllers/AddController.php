@@ -151,7 +151,7 @@ class AddController extends Controller {
       } else {
         $horarios[6] = "Cerrado";
       }
-      $cerveceria->horario=$horarios;
+      $cerveceria->horario = $horarios;
 
       // Obtener lag/long con cURL
       $address = $request->direccion . ", B8000 Bahía Blanca, Buenos Aires";
@@ -175,7 +175,7 @@ class AddController extends Controller {
       $cerveceria->save();
       //Session::flash('message', 'This is a message!');
       // $request->session()->flash('message', 'Task was successful!');
-      return redirect('admin');
+      return redirect('admin')->with(['mensaje' => 'La cervecería fue creada con éxito']);
     }
 
     public function chequeos($request){

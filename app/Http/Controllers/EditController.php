@@ -48,7 +48,7 @@ class EditController extends Controller {
       // Agregar los otros campos
 
       $cerveceria->save();
-      return redirect('admin');
+      return redirect('admin')->with(['mensaje' => 'La cervecería fue actualizada con éxito']);
     } else {
       return redirect('admin');
     }
