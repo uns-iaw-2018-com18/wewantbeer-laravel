@@ -18,8 +18,8 @@
 {% endblock %}
 
 {% block content %}
-  {% if errors.any() %}
-    <span class="crud-error-message">{{ errors.first() }}</span>
+  {% if errors[0] %}
+    <span class="crud-error-message">{{ errors[0] }}</span>
   {% endif %}
   <form id="crud-form" action="/admin/edit/{{ cerveceria.id }}" method="POST" enctype="multipart/form-data">
     <div id="img-container">

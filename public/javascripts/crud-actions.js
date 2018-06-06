@@ -57,3 +57,26 @@ function previewImage(input, img, src) {
     img.attr("src", src);
   }
 }
+
+function duplicateId(element){
+        var nombre = $(element).val();
+        $.ajax({
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          },
+            type: "POST",
+            url: '/checkid',
+            data: {nombre:nombre},
+            dataType: "json",
+            success: function(res) {
+                if(res.exists){
+                    alert('true');
+                }else{
+                    alert('false');
+                }
+            },
+            error: function (jqXHR, exception) {
+              alert('error');
+            }
+        });
+    }

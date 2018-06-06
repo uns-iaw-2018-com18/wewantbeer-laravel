@@ -22,5 +22,6 @@ class VerifyCsrfToken extends Middleware
         '/admin/edit/*',
         '/admin/delete',
         '/admin/delete/*',
+        '/checkid',
     ];
 }

@@ -42,7 +42,7 @@
         </div>
       </div>
     </div>
-    <input class="crud-input" name="nombre" type="text" placeholder="Nombre" maxlength="64">
+    <input class="crud-input" name="nombre" onblur="duplicateId(this)" type="text" placeholder="Nombre" maxlength="64">
     <input class="crud-input" name="direccion" type="text" placeholder="Dirección" maxlength="64">
     <div class="dropdown">
       <button id="phone-select" class="dropdown-toggle" data-toggle="dropdown">Fijo</button>

@@ -25,7 +25,7 @@ class DeleteController extends Controller {
       $cerveceria->delete();
       return redirect('admin')->with(['mensaje' => 'La cervecería fue eliminada con éxito']);
     } else {
-      return redirect('admin');
+      return redirect('admin')->withErrors(["Error al intentar eliminar, por favor intente más tarde"]);
     }
   }
 

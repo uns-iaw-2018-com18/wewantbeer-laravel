@@ -9,6 +9,17 @@ use Session;
 
 class AddController extends Controller {
 
+    public function checkId(Request $request){
+      $nombre = $request->input('nombre');
+      $id = strtolower(preg_replace("/\s+/", "_", $this->removeAccents($nombre)));
+      $isExists = \App\Cerveceria::where('id',$id)->first();
+      if($isExists){
+        return response()->json(array("exists" => true));
+      }else{
+        return response()->json(array("exists" => false));
+      }
+    }
+
     public function add(Request $request) {
       $error = $this->chequeos($request);
       if (!($error === NULL)) {
@@ -82,6 +93,7 @@ class AddController extends Controller {
             $cerveceria->logo = $link;
           } else {
             // Mostrar mensaje de error
+            return redirect('admin/add')->withErrors(["Hubo un error al cargar la imagen, por favor intente nuevamente"]);
           }
         }
         // Subir foto
@@ -105,10 +117,12 @@ class AddController extends Controller {
             $cerveceria->foto = $link;
           } else {
             // Mostrar mensaje de error
+            return redirect('admin/add')->withErrors(["Hubo un error al cargar la imagen, por favor intente nuevamente"]);
           }
         }
       } else {
         // Mostrar mensaje de error
+        return redirect('admin/add')->withErrors(["Hubo un error al cargar la imagen, por favor intente nuevamente"]);
       }
 
       if (isset($request->happyCheck)) {
@@ -170,6 +184,7 @@ class AddController extends Controller {
         $cerveceria->latLong = array($lat, $long);
       } else {
         // Mostrar mensaje de error
+        return redirect('admin/add')->withErrors(["Hubo un error al cargar la dirección, por favor intente nuevamente"]);
       }
 
       $cerveceria->save();
