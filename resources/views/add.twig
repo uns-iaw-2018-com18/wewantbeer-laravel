@@ -22,6 +22,7 @@
     <span class="crud-error-message">{{ errors.first() }}</span>
   {% endif %}
   <form id="crud-form" action="/admin/add" method="POST" enctype="multipart/form-data">
+    <input type="hidden" name="_token" value="{{ csrf_token('authenticate') }}">
     <div id="img-container">
       <div id="logo-container">
         <img id="logo-img" class="preview-img" src="/images/logo-ph.jpg">

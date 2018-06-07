@@ -22,6 +22,7 @@
     <span class="crud-error-message">{{ errors[0] }}</span>
   {% endif %}
   <form id="crud-form" action="/admin/edit/{{ cerveceria.id }}" method="POST" enctype="multipart/form-data">
+    <input type="hidden" name="_token" value="{{ csrf_token('authenticate') }}">
     <div id="img-container">
       <div id="logo-container">
         {% if cerveceria.logo %}

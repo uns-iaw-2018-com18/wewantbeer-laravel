@@ -12,7 +12,7 @@ class VerifyCsrfToken extends Middleware
      * @var array
      */
     protected $except = [
-        '/index',
+      /*  '/index',
         '/login',
         '/crud',
         '/logout',
@@ -22,6 +22,6 @@ class VerifyCsrfToken extends Middleware
         '/admin/edit/*',
         '/admin/delete',
         '/admin/delete/*',
-        '/checkid',
+        '/checkid',*/
     ];
 }
