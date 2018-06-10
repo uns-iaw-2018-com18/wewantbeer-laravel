@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'failed' => 'El usuario y/o contraseña son incorrectos.',
+    'failed' => 'El usuario y la contraseña no coinciden',
     'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
 
 ];
