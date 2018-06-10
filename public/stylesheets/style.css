@@ -6,6 +6,14 @@ body {
   overflow: auto;
 }
 
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 30px white inset;
+}
+
+input:-webkit-autofill:disabled {
+  -webkit-box-shadow: 0 0 0 30px lightgray inset;
+}
+
 /* Index */
 
 #top-navbar {
@@ -645,10 +653,6 @@ body {
     float: left;
   }
 
-input:-webkit-autofill {
-  -webkit-box-shadow: 0 0 0 30px white inset;
-}
-
 .captcha-container {
   height: 100px;
   max-width: 790px;
@@ -707,7 +711,7 @@ input:-webkit-autofill {
 	background-color: rgba(0, 0, 0, 0.9);
 }
 
-#age-verification-modal {
+#confirmation-modal {
 	position: relative;
 	background-color: black;
 	height: auto;
@@ -750,14 +754,14 @@ input:-webkit-autofill {
 		background-color: white;
 	}
 
-#age-verification-top-text {
+#confirmation-top-text {
 	display: block;
 	color: white;
 	font-size: 28px;
 	margin: 50px 0 10px 0;
 }
 
-#age-verification-bottom-text {
+#confirmation-bottom-text {
 	display: block;
 	color: white;
 	font-size: 18px;
@@ -841,10 +845,6 @@ input:-webkit-autofill {
   #phone-select:focus {
     outline: none;
   }
-
-#crud-phone-value {
-  display: none;
-}
 
 #crud-phone-input {
   width: 630px;

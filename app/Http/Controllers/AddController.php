@@ -9,13 +9,13 @@ use Session;
 
 class AddController extends Controller {
 
-    public function checkId(Request $request){
+    public function checkId(Request $request) {
       $nombre = $request->input('nombre');
-      $id = strtolower(preg_replace("/\s+/", "_", $this->removeAccents($nombre)));
-      $isExists = \App\Cerveceria::where('id',$id)->first();
-      if($isExists){
+      $id = strtolower(preg_replace("/\s+/", "_", $this->removeAccents($request->nombre)));
+      $exists = \App\Cerveceria::where('id', $id)->first();
+      if ($exists) {
         return response()->json(array("exists" => true));
-      }else{
+      } else {
         return response()->json(array("exists" => false));
       }
     }
@@ -57,76 +57,77 @@ class AddController extends Controller {
       if (!empty($request->instagram)) {
         $cerveceria->instagram = $request->instagram;
       } else {
-        $cerveceria->instagram= "";
-      }
-      // Obtener access_token a partir del refresh_token
-      $curl = curl_init();
-      curl_setopt($curl, CURLOPT_URL, "https://api.imgur.com/oauth2/token");
-      curl_setopt($curl, CURLOPT_TIMEOUT, 30);
-      curl_setopt($curl, CURLOPT_HTTPHEADER, array("content-type: multipart/form-data"));
-      curl_setopt($curl, CURLOPT_POST, 1);
-      curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-      curl_setopt($curl, CURLOPT_POSTFIELDS, array("refresh_token" => "a5432f4ac13a7a4209710b053fcfa9cf390b43b5", "client_id" => "7e1680d3fd3269b", "client_secret" => "c028aa4c4dfc52b37dd72cb31ad2d4d9b03a9356", "grant_type" => "refresh_token"));
-      $out = curl_exec($curl);
-      curl_close($curl);
-      $response = json_decode($out, true);
-      $accessToken = $response["access_token"];
-      if ($accessToken != "") {
-        // Subir logo
-        if ($request->hasFile("logoImg")) {
-          $file = $request->file("logoImg");
-          $name = $file->getClientOriginalName();
-          $data = file_get_contents($file);
-          $albumId = "Exld0Nt";
-          $curl = curl_init();
-          curl_setopt($curl, CURLOPT_URL, "https://api.imgur.com/3/image");
-          curl_setopt($curl, CURLOPT_TIMEOUT, 30);
-          curl_setopt($curl, CURLOPT_HTTPHEADER, array("Authorization: Bearer " . $accessToken));
-          curl_setopt($curl, CURLOPT_POST, 1);
-          curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-          curl_setopt($curl, CURLOPT_POSTFIELDS, array("image" => $data, "album" => $albumId, "type" => "file", "name" => $name, "title" => "Logo " . $request->nombre));
-          $out = curl_exec($curl);
-          curl_close($curl);
-          $response = json_decode($out, true);
-          if ($response["success"] == true) {
-            $link = $response["data"]["link"];
-            $cerveceria->logo = $link;
-          } else {
-            // Mostrar mensaje de error
-            return redirect('admin/add')->withErrors(["Hubo un error al cargar la imagen, por favor intente nuevamente"]);
-          }
-        }
-        // Subir foto
-        if ($request->hasFile("fotoImg")) {
-          $file = $request->file("fotoImg");
-          $name = $file->getClientOriginalName();
-          $data = file_get_contents($file);
-          $albumId = "PVgpgu9";
-          $curl = curl_init();
-          curl_setopt($curl, CURLOPT_URL, "https://api.imgur.com/3/image");
-          curl_setopt($curl, CURLOPT_TIMEOUT, 30);
-          curl_setopt($curl, CURLOPT_HTTPHEADER, array("Authorization: Bearer " . $accessToken));
-          curl_setopt($curl, CURLOPT_POST, 1);
-          curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-          curl_setopt($curl, CURLOPT_POSTFIELDS, array("image" => $data, "album" => $albumId, "type" => "file", "name" => $name, "title" => "Foto " . $request->nombre));
-          $out = curl_exec($curl);
-          curl_close($curl);
-          $response = json_decode($out, true);
-          if ($response["success"] == true) {
-            $link = $response["data"]["link"];
-            $cerveceria->foto = $link;
-          } else {
-            // Mostrar mensaje de error
-            return redirect('admin/add')->withErrors(["Hubo un error al cargar la imagen, por favor intente nuevamente"]);
-          }
-        }
-      } else {
-        // Mostrar mensaje de error
-        return redirect('admin/add')->withErrors(["Hubo un error al cargar la imagen, por favor intente nuevamente"]);
+        $cerveceria->instagram = "";
       }
 
-      if (isset($request->happyCheck)) {
-        $cerveceria->happyHour = $request->happyOpen."-".$request->happyClose;
+      // Si llegaste hasta aca, probablemente quieras saber como funciona la API de Imgur para subir imagenes
+      // Primero tenes que crearte una cuenta en https://imgur.com/register
+      // Luego tenes que registrar tu aplicacion en https://api.imgur.com/oauth2/addclient
+      // Completa los campos, y elegi "OAuth 2 authorization without a callback URL"
+      // Despues tenes que acceder a https://api.imgur.com/oauth2/authorize?client_id=CLIENT_ID&response_type=token
+      // Reemplazando CLIENT_ID por tu Client ID
+      // Ahi te va a pedir autorizacion para ingresar con tu cuenta de Imgur, lo que tenes que aceptar
+      // Luego te redirecciona a una pagina con un URL asi https://imgur.com/#access_token=ACCESS_TOKEN&expires_in=EXPIRES_IN&token_type=bearer&refresh_token=REFRESH_TOKEN&account_username=ACCOUNT_NAME&account_id=ACCOUNT_ID
+      // El valor en el campo access_token es el que tenes que usar para subir imagenes a tu propia cuenta
+      // Ese token expira en un mes, para lo cual necesitas el refresh token para solicitar otro access token
+      // Asi que te conviene guardar todos esos campos para evitar tener que hacer todos los pasos del acceso nuevamente
+      // Para mas informacion sobre la API visita https://apidocs.imgur.com/
+      // GL, HF :)
+
+      $accessToken = env('IMGUR_ACCESS_TOKEN');
+      // Subir logo
+      if ($request->hasFile("logoImg")) {
+        $file = $request->file("logoImg");
+        $name = $file->getClientOriginalName();
+        $data = file_get_contents($file);
+        $albumId = env('IMGUR_LOGOS_ALBUM_ID');
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, "https://api.imgur.com/3/image");
+        curl_setopt($curl, CURLOPT_TIMEOUT, 30);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array("Authorization: Bearer " . $accessToken));
+        curl_setopt($curl, CURLOPT_POST, 1);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, array("image" => $data, "album" => $albumId, "type" => "file", "name" => $name, "title" => "Logo " . $request->nombre));
+        $out = curl_exec($curl);
+        curl_close($curl);
+        $response = json_decode($out, true);
+        if ($response["success"] == true) {
+          $link = $response["data"]["link"];
+          $cerveceria->logo = $link;
+        } else {
+          // Mostrar mensaje de error
+          return redirect('admin/add')->withErrors(["Hubo un error al cargar la imagen, por favor intente nuevamente"]);
+        }
+      }
+      // Subir foto
+      if ($request->hasFile("fotoImg")) {
+        $file = $request->file("fotoImg");
+        $name = $file->getClientOriginalName();
+        $data = file_get_contents($file);
+        $albumId = env('IMGUR_FOTOS_ALBUM_ID');
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, "https://api.imgur.com/3/image");
+        curl_setopt($curl, CURLOPT_TIMEOUT, 30);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array("Authorization: Bearer " . $accessToken));
+        curl_setopt($curl, CURLOPT_POST, 1);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, array("image" => $data, "album" => $albumId, "type" => "file", "name" => $name, "title" => "Foto " . $request->nombre));
+        $out = curl_exec($curl);
+        curl_close($curl);
+        $response = json_decode($out, true);
+        if ($response["success"] == true) {
+          $link = $response["data"]["link"];
+          $cerveceria->foto = $link;
+        } else {
+          // Mostrar mensaje de error
+          return redirect('admin/add')->withErrors(["Hubo un error al cargar la imagen, por favor intente nuevamente"]);
+        }
+      }
+
+      if (isset($request->hhCheck)) {
+        $cerveceria->happyHour = $request->hhOpen."-".$request->hhClose;
+      } else {
+        $cerveceria->happyHour = "";
       }
       $horarios = array();
       // Ahora para cada uno de los dias tengo que agregarlo al arreglo
@@ -188,15 +189,14 @@ class AddController extends Controller {
       }
 
       $cerveceria->save();
-      //Session::flash('message', 'This is a message!');
-      // $request->session()->flash('message', 'Task was successful!');
       return redirect('admin')->with(['mensaje' => 'La cervecería fue creada con éxito']);
     }
 
-    public function chequeos($request){
-        //---------------Chequeos del logo
-        if(empty($request->logoImg))
-          return "Debe haber un logo";
+    public function chequeos(Request $request) {
+        // Chequeos del logo
+        if (empty($request->logoImg)) {
+          return "La cervecería debe tener un logo";
+        }
         // Get Image Dimension
         $fileLogo = $request->file("logoImg");
         $fileinfo = @getimagesize($fileLogo);
@@ -205,18 +205,18 @@ class AddController extends Controller {
         // Get image file extension
         $file_extension = pathinfo($fileLogo->getClientOriginalName(), PATHINFO_EXTENSION);
         // Validate image file extension
-        if ($file_extension!="jpg") {
-            return "La imagen del logo debe tener la extensión .jpg";
+        if ($file_extension != "jpg") {
+          return "La imagen del logo debe tener la extensión .jpg";
         }
         // Validate image file dimension
-         if ($width != "250" || $height != "250") {
+        if ($width != "250" || $height != "250") {
           return "La imagen del logo debe tener las dimensiones 250x250";
         }
-        //---------------fin de chequeo del logo
 
-        //---------------Chequeos de la foto
-        if(empty($request->fotoImg))
-          return "Debe haber una foto";
+        // Chequeos de la foto
+        if (empty($request->fotoImg)) {
+          return "La cervecería debe tener una foto";
+        }
         // Get Image Dimension
         $fileFoto = $request->file("fotoImg");
         $fileinfo = @getimagesize($fileFoto);
@@ -225,78 +225,113 @@ class AddController extends Controller {
         // Get image file extension
         $file_extension = pathinfo($fileFoto->getClientOriginalName(), PATHINFO_EXTENSION);
         // Validate image file extension
-        if ($file_extension!="jpg") {
-            return "La imagen de la foto debe tener la extensión .jpg";
+        if ($file_extension != "jpg") {
+          return "La imagen de la foto debe tener la extensión .jpg";
         }
         // Validate image file dimension
-         if ($width != "520" || $height != "250") {
-          return "La imagen de la foto debe tener las dimensiones 520x250 ".$width." ".$height;
+        if ($width != "520" || $height != "250") {
+          return "La imagen de la foto debe tener las dimensiones 520x250";
         }
-        //---------------fin de chequeo de la foto
-        if(empty($request->nombre))
-          return "El nombre no debe estar vacío";
-        $id = strtolower(preg_replace("/\s+/", "_", $request->nombre));
-        $cerveceria = Cerveceria::where('id',$id)->get();
-        if(isset($cerveceria[0]))
-          return "Ya existe una cerveceria con el nombre ".$request->nombre;
-        if(empty($request->direccion))
-          return "La dirección no debe estar vacía";
+
+        if (empty($request->nombre)) {
+          return "La cervecería debe tener un nombre";
+        }
+        $id = strtolower(preg_replace("/\s+/", "_", $this->removeAccents($request->nombre)));
+        $cerveceria = Cerveceria::where('id', $id)->first();
+        if (isset($cerveceria)) {
+          return "Ya existe una cerveceria con el nombre \"" . $request->nombre . "\"";
+        }
+        if (empty($request->direccion)) {
+          return "La cervecería debe tener una direccion";
+        }
 
         if (isset($request->domCheck)) {
-          if(!isset($request->domOpen) || !isset($request->domClose)){
-            return "Se deben setear los horarios del día domingo";
+          if (!isset($request->domOpen)) {
+            return "El día domingo no tiene horario de apuertura";
           }
-          if($request->domOpen==$request->domClose)
-            return "El horario de comienzo y fin del domingo no debe ser el mismo";
+          if (!isset($request->domClose)) {
+            return "El día domingo no tiene horario de cierre";
+          }
+          if ($request->domOpen == $request->domClose) {
+            return "El día domingo tiene el mismo horario de apertura y cierre";
+          }
         }
         if (isset($request->lunCheck)) {
-          if(!isset($request->lunOpen) || !isset($request->lunClose)){
-            return "Se deben setear los horarios del día lunes";
+          if (!isset($request->lunOpen)) {
+            return "El día lunes no tiene horario de apuertura";
           }
-          if($request->lunOpen==$request->lunClose)
-            return "El horario de comienzo y fin del lunes no debe ser el mismo";
+          if (!isset($request->lunClose)) {
+            return "El día lunes no tiene horario de cierre";
+          }
+          if ($request->lunOpen == $request->lunClose) {
+            return "El día lunes tiene el mismo horario de apertura y cierre";
+          }
         }
         if (isset($request->marCheck)) {
-          if(!isset($request->marOpen) || !isset($request->marClose)){
-            return "Se deben setear los horarios del día martes";
+          if (!isset($request->marOpen)) {
+            return "El día martes no tiene horario de apuertura";
           }
-          if($request->marOpen==$request->marClose)
-            return "El horario de comienzo y fin del martes no debe ser el mismo";
+          if (!isset($request->marClose)) {
+            return "El día martes no tiene horario de cierre";
+          }
+          if ($request->marOpen == $request->marClose) {
+            return "El día martes tiene el mismo horario de apertura y cierre";
+          }
         }
         if (isset($request->mieCheck)) {
-          if(!isset($request->mieOpen) || !isset($request->mieClose)){
-            return "Se deben setear los horarios del día miércoles";
+          if (!isset($request->mieOpen)) {
+            return "El día miércoles no tiene horario de apuertura";
           }
-          if($request->mieOpen==$request->mieClose)
-            return "El horario de comienzo y fin del Miércoles no debe ser el mismo";
+          if (!isset($request->mieClose)) {
+            return "El día miércoles no tiene horario de cierre";
+          }
+          if ($request->mieOpen == $request->mieClose) {
+            return "El día miércoles tiene el mismo horario de apertura y cierre";
+          }
         }
         if (isset($request->jueCheck)) {
-          if(!isset($request->jueOpen) || !isset($request->jueClose)){
-            return "Se deben setear los horarios del día jueves";
+          if (!isset($request->jueOpen)) {
+            return "El día jueves no tiene horario de apuertura";
           }
-          if($request->jueOpen==$request->jueClose)
-            return "El horario de comienzo y fin del jueves no debe ser el mismo";
+          if (!isset($request->jueClose)) {
+            return "El día jueves no tiene horario de cierre";
+          }
+          if ($request->jueOpen == $request->jueClose) {
+            return "El día jueves tiene el mismo horario de apertura y cierre";
+          }
         }
         if (isset($request->vieCheck)) {
-          if(!isset($request->vieOpen) || !isset($request->vieClose)){
-            return "Se deben setear los horarios del día viernes";
+          if (!isset($request->vieOpen)) {
+            return "El día viernes no tiene horario de apuertura";
           }
-          if($request->vieOpen==$request->vieClose)
-            return "El horario de comienzo y fin del viernes no debe ser el mismo";
+          if (!isset($request->vieClose)) {
+            return "El día viernes no tiene horario de cierre";
+          }
+          if ($request->vieOpen == $request->vieClose) {
+            return "El día viernes tiene el mismo horario de apertura y cierre";
+          }
         }
         if (isset($request->sabCheck)) {
-          if(!isset($request->sabOpen) || !isset($request->sabClose)){
-            return "Se deben setear los horarios del día sábado";
+          if (!isset($request->sabOpen)) {
+            return "El día sábado no tiene horario de apuertura";
           }
-          if($request->sabOpen==$request->sabClose)
-            return "El horario de comienzo y fin del sábado no debe ser el mismo";
+          if (!isset($request->sabClose)) {
+            return "El día sábado no tiene horario de cierre";
+          }
+          if ($request->sabOpen == $request->sabClose) {
+            return "El día sábado tiene el mismo horario de apertura y cierre";
+          }
         }
-        if (isset($request->happyCheck)) {
-          if(!isset($request->happyOpen) || !isset($request->happyClose)){
-            return "Se deben setear los horarios del happy hour";
+        if (isset($request->hhCheck)) {
+          if (!isset($request->hhOpen)) {
+            return "El happy hour no tiene horario de inicio";
           }
-          if($request->happyOpen==$request->happyClose)
-            return "El horario de comienzo y fin del happy hour no debe ser el mismo";
+          if (!isset($request->hhClose)) {
+            return "El happy hour no tiene horario de finalización";
+          }
+          if ($request->hhOpen == $request->hhClose) {
+            return "El happy hour tiene el mismo horario de inicio y finalización";
+          }
         }
         return null;
     }

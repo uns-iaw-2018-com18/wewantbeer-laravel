@@ -18,8 +18,8 @@
 {% endblock %}
 
 {% block content %}
-  {% if errors[0] %}
-    <span class="crud-error-message">{{ errors[0] }}</span>
+  {% if errors.any() %}
+    <span class="crud-error-message">{{ errors.first() }}</span>
   {% endif %}
   <form id="crud-form" action="/admin/edit/{{ cerveceria.id }}" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="_token" value="{{ csrf_token('authenticate') }}">
@@ -76,10 +76,11 @@
         <a class="dropdown-item" value="1" href="#">Móvil</a>
       </ul>
     </div>
-    <input name="tipoTel" id="crud-phone-value" type="text" value="0" maxlength="1">
     {% if cerveceria.telefono %}
+      <input name="tipoTel" id="crud-phone-value" type="hidden" value="{{ tipo }}" maxlength="1">
       <input id="crud-phone-input" name="telefono" class="crud-input" type="text" placeholder="Teléfono" value="{{ telefono }}" maxlength="64">
     {% else %}
+      <input name="tipoTel" id="crud-phone-value" type="hidden" value="0" maxlength="1">
       <input id="crud-phone-input" name="telefono" class="crud-input" type="text" placeholder="Teléfono" maxlength="64">
     {% endif %}
     <div class="daytime-box">
@@ -211,18 +212,18 @@
     <div class="daytime-box">
       <label class="day-container">Happy hour
         {% if cerveceria.happyHour != "" %}
-          <input class="day-check" name="happyCheck" type="checkbox" checked="checked">
+          <input class="day-check" name="hhCheck" type="checkbox" checked="checked">
         {% else %}
-          <input class="day-check" name="happyCheck" type="checkbox">
+          <input class="day-check" name="hhCheck" type="checkbox">
         {% endif %}
         <span class="checkmark"></span>
       </label>
       <div class="daytime-input-container">
         {% if cerveceria.happyHour != "" %}
           {% set hh = cerveceria.happyHour|split('-') %}
-          <input class="daytime-input timepicker" name="happyOpen" type="text" placeholder="00:00" value="{{ hh[0] }}"><input class="daytime-input timepicker" name="happyClose" type="text" placeholder="00:00" value="{{ hh[1] }}">
+          <input class="daytime-input timepicker" name="hhOpen" type="text" placeholder="00:00" value="{{ hh[0] }}"><input class="daytime-input timepicker" name="hhClose" type="text" placeholder="00:00" value="{{ hh[1] }}">
         {% else %}
-          <input class="daytime-input timepicker" name="happyOpen" type="text" placeholder="00:00" disabled="disabled"><input class="daytime-input timepicker" name="happyClose" type="text" placeholder="00:00" disabled="disabled">
+          <input class="daytime-input timepicker" name="hhOpen" type="text" placeholder="00:00" disabled="disabled"><input class="daytime-input timepicker" name="hhClose" type="text" placeholder="00:00" disabled="disabled">
         {% endif %}
       </div>
     </div>
@@ -248,7 +249,7 @@
       <input id="crud-social-instagram-input" name="instagram" class="crud-input" type="text" maxlength="64">
     {% endif %}
     <label class="static-input-value" for="crud-social-instagram-input">www.instagram.com/</label>
-    <button id="crud-save-btn" class="crud-btn" type="submit">Guardar</button>
+    <button id="crud-save-btn" class="crud-btn edit" type="submit">Guardar</button>
     <button id="crud-cancel-btn" class="crud-btn">Cancelar</button>
   </form>
 {% endblock %}

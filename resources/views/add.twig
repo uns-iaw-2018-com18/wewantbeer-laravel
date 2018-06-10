@@ -43,7 +43,7 @@
         </div>
       </div>
     </div>
-    <input class="crud-input" name="nombre" onblur="duplicateId(this)" type="text" placeholder="Nombre" maxlength="64">
+    <input class="crud-input" name="nombre" type="text" placeholder="Nombre" maxlength="64">
     <input class="crud-input" name="direccion" type="text" placeholder="Dirección" maxlength="64">
     <div class="dropdown">
       <button id="phone-select" class="dropdown-toggle" data-toggle="dropdown">Fijo</button>
@@ -52,7 +52,7 @@
         <a class="dropdown-item" value="1" href="#">Móvil</a>
       </ul>
     </div>
-    <input name="tipoTel" id="crud-phone-value" type="text" value="0" maxlength="1">
+    <input name="tipoTel" id="crud-phone-value" type="hidden" value="0" maxlength="1">
     <input id="crud-phone-input" name="telefono" class="crud-input" type="text" placeholder="Teléfono" maxlength="64">
     <div class="daytime-box">
       <label class="day-container">Domingo
@@ -119,11 +119,11 @@
     </div>
     <div class="daytime-box">
       <label class="day-container">Happy hour
-        <input class="day-check" name="happyCheck" type="checkbox" checked="checked">
+        <input class="day-check" name="hhCheck" type="checkbox" checked="checked">
         <span class="checkmark"></span>
       </label>
       <div class="daytime-input-container">
-        <input class="daytime-input timepicker" name="happyOpen" type="text" placeholder="00:00"><input class="daytime-input timepicker" name="happyClose" type="text" placeholder="00:00">
+        <input class="daytime-input timepicker" name="hhOpen" type="text" placeholder="00:00"><input class="daytime-input timepicker" name="hhClose" type="text" placeholder="00:00">
       </div>
     </div>
     <input class="crud-input" name="web" type="text" placeholder="Web" maxlength="64">

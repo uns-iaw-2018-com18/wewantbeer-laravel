@@ -18,7 +18,7 @@ class DeleteController extends Controller {
   }
 
   public function delete(String $id) {
-    $cerveceria = Cerveceria::where('id', $id)->get()[0];
+    $cerveceria = Cerveceria::where('id', $id)->first();
     if (isset($cerveceria)) {
       // Eliminar imagenes
 
