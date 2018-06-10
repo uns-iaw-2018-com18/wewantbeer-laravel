@@ -5,8 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
-class LoginController extends Controller
-{
+class LoginController extends Controller {
     /*
     |--------------------------------------------------------------------------
     | Login Controller
@@ -25,9 +24,17 @@ class LoginController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function showLoginForm()
-    {
+    public function showLoginForm() {
         return view('index');
+    }
+
+      /**
+     * Get the login username to be used by the controller.
+     *
+     * @return string
+     */
+    public function username() {
+        return 'username';
     }
 
     /**
@@ -35,7 +42,6 @@ class LoginController extends Controller
      *
      * @var string
      */
-    //protected $redirectTo = '/crud';
     protected function authenticated(Request $request, $user) {
       return redirect('/admin');
     }
@@ -44,8 +50,7 @@ class LoginController extends Controller
      *
      * @return void
      */
-    public function __construct()
-    {
+    public function __construct() {
         $this->middleware('guest')->except('logout');
     }
 }
