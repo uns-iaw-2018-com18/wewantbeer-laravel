@@ -97,9 +97,11 @@ $(function() {
     if (!valid) {
       return false;
     }
-    // Deshabilitar boton guardar luego de enviar el formulario
+    // Deshabilitar botones luego de enviar el formulario
     $("#crud-save-btn").attr("disabled", "disabled");
     $("#crud-save-btn").css("cursor", "default");
+    $("#crud-cancel-btn").attr("disabled", "disabled");
+    $("#crud-cancel-btn").css("cursor", "default");
   });
   // Boton cancelar
   $("#crud-cancel-btn").click(function(event) {

@@ -35,7 +35,6 @@ Route::group(['prefix' => '/admin'], function() {
 
   Route::get('/delete', 'DeleteController@selectDelete') -> middleware('auth');
 
-  // Cambiar a POST
   Route::get('/delete/{id}', 'DeleteController@delete') -> middleware('auth');
 
 });

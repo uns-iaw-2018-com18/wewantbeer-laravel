@@ -82,6 +82,8 @@ class EditController extends Controller {
       return redirect('admin/edit/' . $id)->withErrors([$error]);
     }
 
+    $direccionAnterior = $cerveceria->direccion;
+
     $cerveceria->id = strtolower(preg_replace("/\s+/", "_", $this->removeAccents($request->nombre)));
     $cerveceria->nombre = $request->nombre;
     $cerveceria->direccion = $request->direccion;
@@ -116,9 +118,8 @@ class EditController extends Controller {
       $cerveceria->instagram = "";
     }
 
-    // ----------------------------
-    // Eliminar imagenes anteriores
-    // ----------------------------
+    $logoAnterior = $cerveceria->logo;
+    $fotoAnterior = $cerveceria->foto;
 
     $accessToken = env('IMGUR_ACCESS_TOKEN');
     // Subir logo
@@ -170,6 +171,55 @@ class EditController extends Controller {
       }
     }
 
+    // Eliminar logo anterior
+    if ($request->hasFile("logoImg")) {
+      $imageHash = str_replace("https://i.imgur.com/", "", $logoAnterior);
+      $imageHash = explode(".", $imageHash)[0];
+      $curl = curl_init();
+      curl_setopt($curl, CURLOPT_URL, "https://api.imgur.com/3/image/" . $imageHash);
+      curl_setopt($curl, CURLOPT_TIMEOUT, 30);
+      curl_setopt($curl, CURLOPT_HTTPHEADER, array("Authorization: Bearer " . $accessToken));
+      curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "DELETE");
+      curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+      $out = curl_exec($curl);
+      curl_close($curl);
+      $response = json_decode($out, true);
+      if ($response["success"] != true) {
+        // Intentar nuevamente
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, "https://api.imgur.com/3/image/" . $imageHash);
+        curl_setopt($curl, CURLOPT_TIMEOUT, 30);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array("Authorization: Bearer " . $accessToken));
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "DELETE");
+        curl_exec($curl);
+        curl_close($curl);
+      }
+    }
+    // Eliminar foto anterior
+    if ($request->hasFile("fotoImg")) {
+      $imageHash = str_replace("https://i.imgur.com/", "", $fotoAnterior);
+      $imageHash = explode(".", $imageHash)[0];
+      $curl = curl_init();
+      curl_setopt($curl, CURLOPT_URL, "https://api.imgur.com/3/image/" . $imageHash);
+      curl_setopt($curl, CURLOPT_TIMEOUT, 30);
+      curl_setopt($curl, CURLOPT_HTTPHEADER, array("Authorization: Bearer " . $accessToken));
+      curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "DELETE");
+      curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+      $out = curl_exec($curl);
+      curl_close($curl);
+      $response = json_decode($out, true);
+      if ($response["success"] != true) {
+        // Intentar nuevamente
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, "https://api.imgur.com/3/image/" . $imageHash);
+        curl_setopt($curl, CURLOPT_TIMEOUT, 30);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array("Authorization: Bearer " . $accessToken));
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "DELETE");
+        curl_exec($curl);
+        curl_close($curl);
+      }
+    }
+
     if (isset($request->hhCheck)) {
       $cerveceria->happyHour = $request->hhOpen."-".$request->hhClose;
     } else {
@@ -215,23 +265,25 @@ class EditController extends Controller {
     $cerveceria->horario = $horarios;
 
     // Obtener lag/long con cURL
-    $address = $request->direccion . ", B8000 Bahía Blanca, Buenos Aires";
-    $addr = preg_replace("/\s+/", "+", $address);
-    $url = "https://maps.google.com/maps/api/geocode/json?address=" . $addr;
-    $curl = curl_init();
-    curl_setopt($curl, CURLOPT_URL, $url);
-    curl_setopt($curl, CURLOPT_TIMEOUT, 30);
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-    $out = curl_exec($curl);
-    curl_close($curl);
-    $response = json_decode($out, true);
-    if (isset($response["status"]) && ($response["status"] == "OK")) {
-      $lat = $response["results"][0]["geometry"]["location"]["lat"];
-      $long = $response["results"][0]["geometry"]["location"]["lng"];
-      $cerveceria->latLong = array($lat, $long);
-    } else {
-      // Mostrar mensaje de error
-      return redirect('admin/edit/' . $id)->withErrors(["Hubo un error al cargar la dirección, por favor intente nuevamente"]);
+    if ($direccionAnterior != $request->direccion) {
+      $address = $request->direccion . ", B8000 Bahía Blanca, Buenos Aires";
+      $addr = preg_replace("/\s+/", "+", $address);
+      $url = "https://maps.google.com/maps/api/geocode/json?address=" . $addr;
+      $curl = curl_init();
+      curl_setopt($curl, CURLOPT_URL, $url);
+      curl_setopt($curl, CURLOPT_TIMEOUT, 30);
+      curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+      $out = curl_exec($curl);
+      curl_close($curl);
+      $response = json_decode($out, true);
+      if (isset($response["status"]) && ($response["status"] == "OK")) {
+        $lat = $response["results"][0]["geometry"]["location"]["lat"];
+        $long = $response["results"][0]["geometry"]["location"]["lng"];
+        $cerveceria->latLong = array($lat, $long);
+      } else {
+        // Mostrar mensaje de error
+        return redirect('admin/edit/' . $id)->withErrors(["Hubo un error al cargar la dirección, por favor intente nuevamente"]);
+      }
     }
 
     $cerveceria->save();
