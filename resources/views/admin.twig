@@ -1,10 +1,14 @@
 {% extends 'layout.twig' %}
 
+{% block javascript %}
+  <script src="/javascripts/admin-actions.js"></script>
+{% endblock %}
+
 {% block buttons %}
 <div id="top-navbar">
-  <form action="logout" method="POST">
+  <form action="/logout" method="POST">
     <input type="hidden" name="_token" value="{{ csrf_token('authenticate') }}">
-    <a id="login-btn" href="#" onclick="this.parentNode.submit()">Salir</a>
+    <a id="login-btn" href="/logout">Salir</a>
   </form>
 </div>
 {% endblock %}

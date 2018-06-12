@@ -41,6 +41,10 @@ Route::group(['prefix' => '/admin'], function() {
 
 Route::post('/checkid', ['uses' => 'AddController@checkId']);
 
+Route::get('/logout', function() {
+  return redirect('login');
+});
+
 // Authentication Routes...
 Route::get('login', 'Auth\LoginController@showLoginForm') -> name('login');
 Route::post('login', 'Auth\LoginController@login');
